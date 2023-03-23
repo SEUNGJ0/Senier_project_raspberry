@@ -5,7 +5,7 @@ import schedule
 import time
 from datetime import datetime as date
 
-def main():
+def WSC_main():
     now = date.now()
     current_time = now.strftime("%H:%M:%S")
     print(current_time)
@@ -31,7 +31,7 @@ def main():
 
 if __name__ == "__main__":
     while(True):
-        main()
+        WSC_main()
         time.sleep(1)
         
     

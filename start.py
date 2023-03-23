@@ -2,6 +2,8 @@ import time
 import Motor.stepmoter_set as step
 from hx711py.example import weight_input
 import LCD.LCD_Output as lcd
+from WSC.feedupdate import load_pet_info
+from WSC.RaspberyTotal import WSC_main
 
 import schedule
 import json
@@ -34,7 +36,7 @@ def defaul_set(times, sec):
     time.sleep(5)
 
     file_data["Avg"] = avg
-    with open('Pet_Data.json', 'w', encoding="utf-8") as make_file:
+    with open('Feeder_set.json', 'w', encoding="utf-8") as make_file:
         json.dump(file_data, make_file, ensure_ascii=False)
 
 def feed_output(amount):
@@ -54,7 +56,7 @@ def feed_output(amount):
 def time_set_output(set_time, amount):
     schedule.every().day.at(set_time).do(feed_output, amount)
     while True:
-        if set_time == time.strftime('%H:%M'):
+        if set_time == time.strftime('%H:%M:%S'):
             schedule.run_pending()
             break
         else:
@@ -62,26 +64,36 @@ def time_set_output(set_time, amount):
             lcd.lcd_string(time.strftime('%H:%M:%S'), 0xC0)
             continue
     
+def main():
+    try:
+        with open('Feeder_set.json', 'r') as f:
+            Pet_Json = json.load(f)
+        avg = Pet_Json['Avg']  
 
-try:
-    with open('Pet_Data.json', 'r') as f:
-        Pet_Json = json.load(f)
-    avg = Pet_Json['Avg']  
+    except:
+        avg = None
+    WSC_main()
+    while True:
+        # LCD 초기화
+        lcd.lcd_init()
+        if avg:
+            amount, pet_data = load_pet_info()
+    
+            time_set_output(pet_data['pet_feed_time_B'], amount)
+            time_set_output(pet_data['pet_feed_time_L'], amount)
+            if pet_data['pet_feed_time_D']:
+                time_set_output(pet_data['pet_feed_time_D'], amount)
+            
+        else:
+            lcd.lcd_string("Error!!", 0x80)
+            lcd.lcd_string('Avg not set!', 0xC0)
+            time.sleep(5)
+            lcd.lcd_string('Start setup....', 0xC0)
+            time.sleep(3)
+            defaul_set(5, 5)
 
-except:
-    avg = None
 
-while True:
-    # LCD 초기화
-    lcd.lcd_init()
-    if avg:
-        time_set_output('15:17', 300)
-    else:
-        lcd.lcd_string("Error!!", 0x80)
-        lcd.lcd_string('Avg not set!', 0xC0)
-        time.sleep(5)
-        lcd.lcd_string('Start setup....', 0xC0)
-        time.sleep(3)
-        defaul_set(5, 5)
+if __name__ == "__main__":
+    main()
 
         
