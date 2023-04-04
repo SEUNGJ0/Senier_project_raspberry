@@ -1,12 +1,10 @@
-import time
+import time, json
 import Motor.stepmoter_set as step
 from hx711py.example import weight_input
 import LCD.LCD_Output as lcd
 from WSC.feedupdate import load_pet_info
 from WSC.RaspberyTotal import WSC_main
-
-import schedule
-import json
+import multiprocessing
 from collections import OrderedDict
 
 file_data = OrderedDict()
@@ -38,8 +36,9 @@ def defaul_set(times, sec):
     file_data["Avg"] = avg
     with open('Feeder_set.json', 'w', encoding="utf-8") as make_file:
         json.dump(file_data, make_file, ensure_ascii=False)
+    return avg
 
-def feed_output(amount):
+def feed_output(amount, avg):
     work_time = round(amount / avg)
     lcd.lcd_string(f"{work_time}Sec run for", 0x80)
     lcd.lcd_string(f"{amount}g output", 0xC0)
@@ -51,49 +50,44 @@ def feed_output(amount):
     lcd.lcd_string("Done output", 0x80)
     lcd.lcd_string(f"{amount}g outputed", 0xC0)
     time.sleep(5)
-
-
-def time_set_output(set_time, amount):
-    schedule.every().day.at(set_time).do(feed_output, amount)
-    while True:
-        if set_time == time.strftime('%H:%M:%S'):
-            schedule.run_pending()
-            break
-        else:
-            lcd.lcd_string("Current Time", 0x80)
-            lcd.lcd_string(time.strftime('%H:%M:%S'), 0xC0)
-            continue
     
 def main():
     try:
         with open('Feeder_set.json', 'r') as f:
             Pet_Json = json.load(f)
-        avg = Pet_Json['Avg']  
+        avg = Pet_Json['Avg']
+        print("avg : ",avg)
 
     except:
         avg = None
-    WSC_main()
+
     while True:
-        # LCD 초기화
-        lcd.lcd_init()
-        if avg:
-            amount, pet_data = load_pet_info()
-    
-            time_set_output(pet_data['pet_feed_time_B'], amount)
-            time_set_output(pet_data['pet_feed_time_L'], amount)
-            if pet_data['pet_feed_time_D']:
-                time_set_output(pet_data['pet_feed_time_D'], amount)
-            
+        lcd.lcd_init()  # LCD initialization
+        amount, pet_data = load_pet_info()
+        CrtTime = time.strftime('%H:%M:%S')
+        if avg and CrtTime in [pet_data['pet_feed_time_B'], pet_data['pet_feed_time_L'], pet_data['pet_feed_time_D']]:
+            print("출력!!")
+            feed_output(amount, avg)
         else:
+            lcd.lcd_string("Current Time", 0x80)
+            lcd.lcd_string(CrtTime, 0xC0)
+            time.sleep(1)
+
+        if not avg:
             lcd.lcd_string("Error!!", 0x80)
             lcd.lcd_string('Avg not set!', 0xC0)
-            time.sleep(5)
+            time.sleep(3)
             lcd.lcd_string('Start setup....', 0xC0)
             time.sleep(3)
-            defaul_set(5, 5)
+            avg = default_set(5, 5)
+
 
 
 if __name__ == "__main__":
+    process = multiprocessing.Process(target=WSC_main)
+    process.start()
     main()
+    
+
 
         

@@ -47,12 +47,13 @@ def add_pet_feed(today):
     feed_data['Pet_daily_feed'].append(new_feeding_data)
 
     # JSON 파일 업데이트.
-    with open('pet_feed.json', 'w') as f:
+    with open('Pet_feed.json', 'w') as f:
         json.dump(feed_data, f, indent=4)
 
 def edit_pet_feed(feed_list):
     # 오늘 날짜를 yyyy-mm-dd 포맷으로 읽어옴
-    today = str(date.today())
+    td = date.today()
+    today = f"{td.year}-{str(td.month).zfill(2)}-{str(td.day)}"
     amount, pet_data = load_pet_info()
     # 사료 지급 일지 JSON 파일 로드
     with open('Pet_feed.json', 'r') as f:
@@ -84,7 +85,7 @@ def edit_pet_feed(feed_list):
                 add_pet_feed(today)
         
     # JSON 파일 업데이트.
-        with open('pet_feed.json', 'w') as f:
+        with open('Pet_feed.json', 'w') as f:
             json.dump(feed_data, f, indent=4)
 
 if __name__ == "__main__":

@@ -115,6 +115,29 @@
                     "remain_amount": null
                 }
             ]
+        },
+        {
+            "date": "2023-04-4",
+            "feedings": [
+                {
+                    "time": "10:30:00",
+                    "feed_amount": 22,
+                    "feed_index": false,
+                    "remain_amount": null
+                },
+                {
+                    "time": "12:32:00",
+                    "feed_amount": 22,
+                    "feed_index": false,
+                    "remain_amount": null
+                },
+                {
+                    "time": "19:09:00",
+                    "feed_amount": 22,
+                    "feed_index": true,
+                    "remain_amount": null
+                }
+            ]
         }
     ]
 }

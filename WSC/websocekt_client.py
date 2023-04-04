@@ -2,7 +2,7 @@ import asyncio
 import websockets
 
 async def send_message():
-    async with websockets.connect('ws://192.168.1.182:80/ws/sensor/') as websocket:
+    async with websockets.connect('ws://192.168.1.182:81/ws/sensor/') as websocket:
         # Pet_feed Json 파일을 읽어서 서버에게 전송 ()
         with open('Pet_feed.json', 'r') as file:
             pet_feed_data = file.read()
