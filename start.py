@@ -9,7 +9,7 @@ from collections import OrderedDict
 
 file_data = OrderedDict()
 
-def defaul_set(times, sec):
+def default_set(times, sec):
     global avg
     i = 0
     set_list = []
@@ -62,23 +62,29 @@ def main():
         avg = None
 
     while True:
-        lcd.lcd_init()  # LCD initialization
+        # LCD 초기화
+        lcd.lcd_init()  
+        # 사용자가 설정한 펫 정보데이터와 하루 지급 사료량 읽어옴
         amount, pet_data = load_pet_info()
+
         CrtTime = time.strftime('%H:%M:%S')
+        # 현재 시각과 지정된 시간 대조 조건문 
         if avg and CrtTime in [pet_data['pet_feed_time_B'], pet_data['pet_feed_time_L'], pet_data['pet_feed_time_D']]:
-            print("출력!!")
             feed_output(amount, avg)
         else:
             lcd.lcd_string("Current Time", 0x80)
             lcd.lcd_string(CrtTime, 0xC0)
-            time.sleep(1)
 
+            # Refresh 빈도 설정
+            time.sleep(1)
+        # 초당 사료 추출량의 평균 설정이 안되있는 경우 실행
         if not avg:
             lcd.lcd_string("Error!!", 0x80)
             lcd.lcd_string('Avg not set!', 0xC0)
             time.sleep(3)
             lcd.lcd_string('Start setup....', 0xC0)
             time.sleep(3)
+            # 추출 세팅 함수 실행 및 평균값 가져옴
             avg = default_set(5, 5)
 
 
