@@ -17,20 +17,20 @@ def default_set(times, sec):
     while i < times:
         i += 1
         print(f"Output {numdict[i]}..")
-        lcd.lcd_string(f"Output {numdict[i]}..", 0x80)
-        lcd.lcd_string(f"Woking {sec}Sec..", 0xC0)
+        lcd.lcd_string(f"Output {numdict[i]}..", 1)
+        lcd.lcd_string(f"Woking {sec}Sec..", 2)
         step.StepmoterRun(sec)
         time.sleep(2)
 
         weight = weight_input()
-        lcd.lcd_string(f"Input {weight}g", 0xC0)
+        lcd.lcd_string(f"Input {weight}g", 2)
         set_list.append(weight)
         time.sleep(3)
     
     avg = sum(set_list)/len(set_list)
     print(set_list)
-    lcd.lcd_string("Setup is Done", 0x80)
-    lcd.lcd_string(f'average:{avg}g', 0xC0)
+    lcd.lcd_string("Setup is Done", 1)
+    lcd.lcd_string(f'average:{avg}g', 2)
     time.sleep(5)
 
     file_data["Avg"] = avg
@@ -40,15 +40,15 @@ def default_set(times, sec):
 
 def feed_output(amount, avg):
     work_time = round(amount / avg)
-    lcd.lcd_string(f"{work_time}Sec run for", 0x80)
-    lcd.lcd_string(f"{amount}g output", 0xC0)
+    lcd.lcd_string(f"{work_time}Sec run for", 1)
+    lcd.lcd_string(f"{amount}g output", 2)
     time.sleep(3)
-    lcd.lcd_string("Doing output..", 0x80)
-    lcd.lcd_string(f"{work_time}Sec will work", 0xC0)
+    lcd.lcd_string("Doing output..", 1)
+    lcd.lcd_string(f"{work_time}Sec will work", 2)
 
     step.StepmoterRun(work_time)
-    lcd.lcd_string("Done output", 0x80)
-    lcd.lcd_string(f"{amount}g outputed", 0xC0)
+    lcd.lcd_string("Done output", 1)
+    lcd.lcd_string(f"{amount}g outputed", 2)
     time.sleep(5)
     
 def main():
@@ -72,17 +72,17 @@ def main():
         if avg and CrtTime in [pet_data['pet_feed_time_B'], pet_data['pet_feed_time_L'], pet_data['pet_feed_time_D']]:
             feed_output(amount, avg)
         else:
-            lcd.lcd_string("Current Time", 0x80)
-            lcd.lcd_string(CrtTime, 0xC0)
+            lcd.lcd_string("Current Time", 1)
+            lcd.lcd_string(CrtTime, 2)
 
             # Refresh 빈도 설정
             time.sleep(1)
         # 초당 사료 추출량의 평균 설정이 안되있는 경우 실행
         if not avg:
-            lcd.lcd_string("Error!!", 0x80)
-            lcd.lcd_string('Avg not set!', 0xC0)
+            lcd.lcd_string("Error!!", 1)
+            lcd.lcd_string('Avg not set!', 2)
             time.sleep(3)
-            lcd.lcd_string('Start setup....', 0xC0)
+            lcd.lcd_string('Start setup....', 2)
             time.sleep(3)
             # 추출 세팅 함수 실행 및 평균값 가져옴
             avg = default_set(5, 5)
