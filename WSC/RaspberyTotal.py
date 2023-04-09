@@ -1,4 +1,7 @@
-from WSC import feedupdate, websocekt_client
+try:
+    from WSC import feedupdate, websocekt_client
+except:
+    import feedupdate, websocekt_client
 import asyncio
 import time
 from datetime import datetime as date
@@ -20,8 +23,10 @@ def WSC_main():
             epf_args_list[5] = 1
 
         feedupdate.edit_pet_feed(epf_args_list)
-        
-        asyncio.get_event_loop().run_until_complete(websocekt_client.send_message())
+        try:
+            asyncio.get_event_loop().run_until_complete(websocekt_client.send_message())
+        except:
+            print("서버 통신 오류")
         time.sleep(1)
 
 if __name__ == "__main__":
