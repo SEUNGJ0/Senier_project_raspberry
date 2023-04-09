@@ -60,8 +60,7 @@ def lcd_byte(bits, mode):
 def lcd_string(message,line):
     # 문자열을 해당 라인에 출력
     message = message.ljust(LCD_WIDTH," ")
-    line_index = {1:0x80, 2:0xC0}
-    lcd_byte(line_index[line], LCD_CMD)
+    lcd_byte(line, LCD_CMD)
 
     for i in range(LCD_WIDTH):
         lcd_byte(ord(message[i]),LCD_CHR)
@@ -72,23 +71,23 @@ def lcd_integer(intdata, line):
     lcd_byte(intdata, LCD_CHR)
 
 def main():
-	# Main program block
+    # Main program block
 
-	# Initialise display
-	lcd_init()
+    # Initialise display
+    lcd_init()
 
-	while True:
-    # Send some test
-    lcd_string("TESTWORD       <",LCD_LINE_1)
-    lcd_string("I2C LCD        <",LCD_LINE_2)
+    while True:
+        # Send some test
+        lcd_string("TESTWORD       <",LCD_LINE_1)
+        lcd_string("I2C LCD        <",LCD_LINE_2)
 
-    time.sleep(1)
+        time.sleep(1)
 
-    # Send some more text
-    lcd_string(">         RPiSpy",LCD_LINE_1)
-    lcd_string(">        I2C LCD",LCD_LINE_2)
+        # Send some more text
+        lcd_string(">         RPiSpy",LCD_LINE_1)
+        lcd_string(">        I2C LCD",LCD_LINE_2)
 
-    time.sleep(1)
+        time.sleep(1)
 
 if __name__ == '__main__':
 	try:
