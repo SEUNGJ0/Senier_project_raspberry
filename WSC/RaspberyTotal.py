@@ -1,7 +1,4 @@
-try:
-    from WSC import feedupdate, websocekt_client
-except:
-    import feedupdate, websocekt_client
+from WSC import feedupdate, websocekt_client
 import asyncio
 import time
 from datetime import datetime as date

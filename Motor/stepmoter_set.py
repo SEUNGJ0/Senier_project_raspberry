@@ -5,21 +5,18 @@ def StepmoterRun(settime):
     g.setwarnings(False)
     g.setmode(g.BCM)
 
-    # 모터의 step sequence 정의
     step_sequence = [
-        [1, 0, 0, 1],
-        [1, 0, 0, 0],
         [1, 1, 0, 0],
-        [0, 1, 0, 0],
         [0, 1, 1, 0],
-        [0, 0, 1, 0],
         [0, 0, 1, 1],
-        [0, 0, 0, 1]
+        [1, 0, 0, 1],
     ]
+
 
     # Set up motor pins
     step_pins = [17, 27, 22, 23]
     for pin in step_pins:
+
         g.setup(pin, g.OUT)
         g.output(pin, False)
 
@@ -98,7 +95,7 @@ def StepmoterRun2(settime):
 
 
 
-            time.sleep(0.0015)
+            time.sleep(0.002)
         else:
             for i in StepPins:
                 g.output(i, False)
@@ -106,4 +103,5 @@ def StepmoterRun2(settime):
             break
 
 if  __name__ == "__main__":
-    StepmoterRun2(1440)
+    # StepmoterRun2(1440)
+    StepmoterRun(30)
