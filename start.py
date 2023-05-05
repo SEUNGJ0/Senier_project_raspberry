@@ -12,7 +12,7 @@ feedmass = Massdetection()
 LCD_LINE_1 = 0x80 # LCD RAM address for the 1st line
 LCD_LINE_2 = 0xC0 # LCD RAM address for the 2nd line
 
-def default_set(times, sec):
+def default_set(times, sec)
     global avg
     i = 0
     set_list = []
