@@ -1,4 +1,2 @@
-Pet_feed.json
-Pet_info.json
-Feeder_set.json
+*.json
 __pycache__
