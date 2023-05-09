@@ -22,5 +22,7 @@ class Massdetection():
         return round(val)
 
 if __name__ == "__main__":
+    import time
     feeder = Massdetection()
+    time.sleep(3)
     print(feeder.weight_input())

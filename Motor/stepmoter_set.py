@@ -72,28 +72,30 @@ class StepperMotor:
             GPIO.output(i, False)
         print(f'{int(count/512*90)}도 회전')
     
-    def run_with_command(self, command):
-        if command:
+    def run_on(self):
+        while(True):
             for pin in range(len(self.pins)):
                 xpin = self.pins[pin]
                 if self.sequence[self.step_counter][pin] == 1:
                     GPIO.output(xpin, True)
                 else:
                     GPIO.output(xpin, False)
-
+            time.sleep(0.002)
             self.step_counter += 1
             if self.step_counter == self.step_count:
                 self.step_counter = 0
             self.count += 1
-        else:
-            print("모터 작동 종료")
-            for pin in self.pins:
-                GPIO.output(pin, False)
-                
+            
+            
+    def run_off(self):
+        print("모터 작동 종료")
+        for pin in self.pins:
+            GPIO.output(pin, False)
+    
 if __name__ == "__main__":
     Moter_1 = StepperMotor()
     print("모터 작동 시작")
-    for i in range(1000):
-        Moter_1.run_with_command(True)
+    for i in range(10000):
+        Moter_1.run_on()
         time.sleep(0.002)
-    Moter_1.run_with_command(False)
+    Moter_1.run_off()
