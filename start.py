@@ -15,13 +15,15 @@ def feed_output(amount):
     lcd.lcd_init() 
     feedmass = Massdetection()
     lcd.lcd_string(f"Target : {amount}g.", LCD_LINE_1)
-
-    STM.run_on()
+    stop_event = threading.Event()
+    t1 = threading.Thread(target=STM.run_with_command, args=(stop_event,))
+    t1.start()
     while(True):
         lcd.lcd_string(f"Measured : {feedmass.weight_input()}g", LCD_LINE_2)
         time.sleep(0.1)
         if feedmass.weight_input() >= amount:
-            STM.run_off()
+            stop_event.set()
+            t1.join()
             print(feedmass.weight_input())
             return feedmass.weight_input()
 
