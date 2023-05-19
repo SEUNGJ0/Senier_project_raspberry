@@ -1,4 +1,4 @@
-import time, multiprocessing, threading
+import time, multiprocessing
 from Motor.stepmoter_set import StepperMotor
 from HX711.RoadCellOutput import Massdetection
 import LCD.LCD_Output as lcd
@@ -15,8 +15,8 @@ def feed_output(amount):
     lcd.lcd_init() 
     feedmass = Massdetection()
     lcd.lcd_string(f"Target : {amount}g.", LCD_LINE_1)
-    stop_event = threading.Event()
-    t1 = threading.Thread(target=STM.run_with_command, args=(stop_event,))
+    stop_event = multiprocessing.Event()
+    t1 = multiprocessing.Process(target=STM.run_with_command, args=(stop_event,))
     t1.start()
     while(True):
         lcd.lcd_string(f"Measured : {feedmass.weight_input()}g", LCD_LINE_2)
@@ -57,6 +57,10 @@ def main():
         feed_time_add_list = time_add(feed_time_list)
         epf_args_list = [0, 0, 0, 0, 0, 0]
         today_feed, feed_data = read_today_data()
+        
+        if pet_data['pet_feed_amount_now']:
+            feed_output(int(pet_data['pet_feed_amount_now']))
+
         if CrtTime in feed_time_list:
             feed_index = int(feed_time_list.index(CrtTime))
             if not today_feed['feedings'][feed_index]["feed_index"]:
@@ -65,7 +69,7 @@ def main():
                 lcd.lcd_string(f"Given: {given_amount}g", LCD_LINE_2)
                 epf_args_list[feed_index+3] = int(given_amount)
                 edit_pet_feed(epf_args_list)
-                time.sleep(5)
+                # time.sleep(3)
                                 
         else:
             lcd.lcd_string("Current Time", LCD_LINE_1)
