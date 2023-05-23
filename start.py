@@ -59,8 +59,9 @@ def main():
         today_feed, feed_data = read_today_data()
         
         if pet_data['pet_feed_amount_now']:
-            feed_output(int(pet_data['pet_feed_amount_now']))
-
+            given_amount = feed_output(int(pet_data['pet_feed_amount_now']))
+            lcd.lcd_string("Done!!", LCD_LINE_1)
+            lcd.lcd_string(f"Given: {given_amount}g", LCD_LINE_2)
         if CrtTime in feed_time_list:
             feed_index = int(feed_time_list.index(CrtTime))
             if not today_feed['feedings'][feed_index]["feed_index"]:

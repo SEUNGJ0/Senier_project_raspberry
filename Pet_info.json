@@ -1,7 +1,8 @@
 {
     "pet_name": "초코",
-    "pet_feed_amount": "285",
-    "pet_feed_time_B": "16:40",
-    "pet_feed_time_L": "16:32",
-    "pet_feed_time_D": "23:25"
+    "pet_feed_amount": "170",
+    "pet_feed_time_B": "10:40",
+    "pet_feed_time_L": "13:25",
+    "pet_feed_time_D": "16:57",
+    "pet_feed_amount_now": ""
 }

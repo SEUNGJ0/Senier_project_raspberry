@@ -96,4 +96,3 @@ if __name__ == "__main__":
     for i in range(10000):
         Moter_1.run_with_command()
         time.sleep(0.002)
-    run_with_command
